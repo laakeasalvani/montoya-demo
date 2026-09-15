@@ -544,10 +544,14 @@ button, input, select, textarea { font: inherit; }
 
 @media (max-width: 900px) {
   :root { --header-h: 66px; }
+  /* backdrop-filter makes the header the containing block for the fixed
+     menu panel, which clips it to the header's height — use a solid bar */
+  .site-header { background: var(--asphalt); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .menu-toggle { display: block; }
   .header-actions .btn { display: none; }
+  /* panel starts at the header's bottom edge (measured in JS when opened) */
   .main-nav {
-    position: fixed; left: 0; right: 0; top: var(--nav-top, 100px); bottom: 0;
+    position: fixed; left: 0; right: 0; top: var(--nav-top, 110px); bottom: 0; z-index: 60;
     flex-direction: column; gap: 0; margin: 0;
     background: var(--asphalt); padding: 16px var(--pad) 40px;
     transform: translateX(100%); transition: transform .28s ease; visibility: hidden;

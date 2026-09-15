@@ -6,7 +6,7 @@
 
   /* ---------------- page routing (#/about, #/services ...) ---------------- */
   var pages = document.querySelectorAll(".page");
-  var navLinks = document.querySelectorAll(".main-nav a[data-route]");
+  var navLinks = document.querySelectorAll("a[data-route]");
 
   function routeFromHash() {
     var h = location.hash;
@@ -44,28 +44,29 @@
 
   /* ---------------- mobile menu ---------------- */
   var toggle = document.querySelector(".menu-toggle");
-  var nav = document.getElementById("main-nav");
-  var header = document.querySelector(".site-header");
+  var menu = document.getElementById("mobile-menu");
+  var menuClose = menu.querySelector(".menu-close");
 
+  function openMenu() {
+    menu.hidden = false;
+    toggle.setAttribute("aria-expanded", "true");
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    menuClose.focus();
+  }
   function closeMenu() {
-    nav.classList.remove("is-open");
+    if (menu.hidden) return;
+    menu.hidden = true;
     toggle.setAttribute("aria-expanded", "false");
-    toggle.setAttribute("aria-label", "Open menu");
+    document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
   }
-  toggle.addEventListener("click", function () {
-    var open = !nav.classList.contains("is-open");
-    if (open) {
-      document.documentElement.style.setProperty("--nav-top", header.getBoundingClientRect().bottom + "px");
-      nav.classList.add("is-open");
-      toggle.setAttribute("aria-expanded", "true");
-      toggle.setAttribute("aria-label", "Close menu");
-      document.body.style.overflow = "hidden";
-    } else {
-      closeMenu();
-    }
-  });
+  toggle.addEventListener("click", openMenu);
+  menuClose.addEventListener("click", function () { closeMenu(); toggle.focus(); });
+  /* any link inside the menu closes it (the hashchange then switches the page) */
+  menu.addEventListener("click", function (e) { if (e.target.closest("a")) closeMenu(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
+  window.addEventListener("resize", function () { if (window.innerWidth > 900) closeMenu(); });
 
   /* ---------------- hero: cross-fading job clips ---------------- */
   var hero = (function () {

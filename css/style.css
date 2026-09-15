@@ -178,7 +178,24 @@ button, input, select, textarea { font: inherit; }
   text-decoration: none; color: #fff; white-space: nowrap;
 }
 .nav-phone svg { color: var(--red); }
-.nav-phone-mobile { display: none; }
+
+/* phone menu: a direct child of <body>, so nothing in the header can clip or bury it */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column;
+  background: var(--asphalt);
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  animation: menuIn .22s ease both;
+}
+@keyframes menuIn { from { opacity: 0; } to { opacity: 1; } }
+.mobile-menu-top { display: flex; align-items: center; justify-content: space-between; min-height: 72px; border-bottom: 1px solid var(--form); flex: none; }
+.menu-close { display: grid; place-items: center; width: 44px; height: 44px; background: none; color: #fff; border: 1px solid var(--joint); border-radius: var(--radius); padding: 0; cursor: pointer; }
+.mobile-links { display: flex; flex-direction: column; padding-top: 12px; padding-bottom: 12px; }
+.mobile-links a { font-family: var(--f-display); font-weight: 800; font-size: 40px; line-height: 1; text-transform: uppercase; text-decoration: none; color: #fff; padding: 16px 0; border-bottom: 1px solid var(--form); }
+.mobile-links a.is-current { color: var(--red); }
+.mobile-menu-foot { display: flex; flex-direction: column; gap: 12px; padding-top: 20px; padding-bottom: 32px; margin-top: auto; }
+@media (min-width: 901px) { .mobile-menu { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .mobile-menu { animation: none; } }
 
 .menu-toggle { display: none; width: 44px; height: 44px; background: none; border: 1px solid var(--joint); border-radius: var(--radius); padding: 0; cursor: pointer; position: relative; }
 .menu-toggle span { position: absolute; left: 11px; right: 11px; height: 2px; background: #fff; transition: transform .2s, opacity .2s; }
@@ -544,24 +561,10 @@ button, input, select, textarea { font: inherit; }
 
 @media (max-width: 900px) {
   :root { --header-h: 66px; }
-  /* backdrop-filter makes the header the containing block for the fixed
-     menu panel, which clips it to the header's height — use a solid bar */
   .site-header { background: var(--asphalt); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .main-nav { display: none; }
   .menu-toggle { display: block; }
   .header-actions .btn { display: none; }
-  /* panel starts at the header's bottom edge (measured in JS when opened) */
-  .main-nav {
-    position: fixed; left: 0; right: 0; top: var(--nav-top, 110px); bottom: 0; z-index: 60;
-    flex-direction: column; gap: 0; margin: 0;
-    background: var(--asphalt); padding: 16px var(--pad) 40px;
-    transform: translateX(100%); transition: transform .28s ease; visibility: hidden;
-    overflow-y: auto;
-  }
-  .main-nav.is-open { transform: none; visibility: visible; }
-  .main-nav a { font-family: var(--f-display); font-weight: 800; font-size: 40px; letter-spacing: .01em; padding: 12px 0; border-bottom: 1px solid var(--form); color: #fff; }
-  .main-nav a.is-current::after { display: none; }
-  .main-nav a.is-current { color: var(--red); }
-  .nav-phone-mobile { display: block; margin-top: 18px; border-bottom: 0 !important; font-family: var(--f-label) !important; font-size: 24px !important; color: var(--red) !important; }
   .header-actions { margin-left: auto; }
 
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
